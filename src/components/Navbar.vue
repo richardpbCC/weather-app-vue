@@ -45,7 +45,7 @@
         </ul>
         <form
           class="d-flex"
-          v-on:submit.stop.prevent="getWeatherData"
+          v-on:submit.stop.prevent="getCoordinates"
           ref="searchBox"
         >
           <input
@@ -73,22 +73,38 @@ export default {
   }),
 
   methods: {
-    getWeatherData: async function (event) {
+    getCoordinates: async function (event) {
+      //const postCode = this.destination;
+      const postCode = "160-0022";
+      const countryCode = "JP";
+      this.$refs.searchBox.reset();
+      const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
+
+      const { data } = await axios.get(
+        `${urlBase}zip=${postCode},${countryCode}&appid=${
+          import.meta.env.VITE_API_KEY
+        }`
+      );
+
+      const coordinates = { lat: data.lat, lon: data.lon };
+
+      this.getWeatherData(coordinates);
+    },
+
+    getWeatherData: async function (coordinates) {
       try {
-        //const postCode = this.destination;
-        const postCode = "160-0022";
-        const urlBase = "https://api.openweathermap.org/data/2.5/weather?";
-        const countryCode = "JP";
-        this.$refs.searchBox.reset();
+        const urlBase = "https://api.openweathermap.org/data/2.5/onecall?";
 
         const { data } = await axios.get(
-          `${urlBase}zip=${postCode},${countryCode}&units=metric&appid=${
+          `${urlBase}lat=${coordinates.lat}&lon=-${
+            coordinates.lon
+          }&exclude=minutely,hourly&units=metric&appid=${
             import.meta.env.VITE_API_KEY
           }`
         );
         console.log(data);
-        
-        this.$emit("weatherData", data);        
+
+        this.$emit("weatherData", data);
       } catch (error) {
         console.error(error);
       }
