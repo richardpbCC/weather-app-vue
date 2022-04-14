@@ -75,7 +75,7 @@ export default {
         days[day]
       }`;
 
-      console.log(formattedDate);
+      return formattedDate;
     },
   },
 };
