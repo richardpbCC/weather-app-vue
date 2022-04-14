@@ -14,15 +14,26 @@ export default {
     Information,
     Footer,
   },
+
+  data: () => ({
+   weatherData: {},
+  }),
+
+  methods: {
+    updateWeatherData: function (newWeatherData) {
+      this.weatherData = newWeatherData;      
+    }
+  }
+
 };
 </script>
 
 <template>
   <header>
     <div id="app">
-      <Navbar />
+      <Navbar v-on:weatherData="updateWeatherData"/>
       <Location /> 
-      <Cards />
+      <Cards v-bind:weatherData="weatherData"/>
       <Information />
       <Footer />
     </div>

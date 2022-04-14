@@ -43,12 +43,17 @@
             <a class="nav-link disabled">Disabled</a>
           </li>
         </ul>
-        <form class="d-flex">
+        <form
+          class="d-flex"
+          v-on:submit.stop.prevent="getWeatherData"
+          ref="searchBox"
+        >
           <input
             class="form-control me-2"
             type="search"
             placeholder="160-0022"
             aria-label="Search"
+            v-model="destination"
           />
           <button class="btn btn-outline-success" type="submit">Submit</button>
         </form>
@@ -58,8 +63,39 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Navbar",
+
+  data: () => ({
+    destination: "",
+  }),
+
+  methods: {
+    getWeatherData: async function (event) {
+      try {
+        //const postCode = this.destination;
+        const postCode = "160-0022";
+        const urlBase = "https://api.openweathermap.org/data/2.5/weather?";
+        const countryCode = "JP";
+        this.$refs.searchBox.reset();
+
+        const { data } = await axios.get(
+          `${urlBase}zip=${postCode},${countryCode}&units=metric&appid=${
+            import.meta.env.VITE_API_KEY
+          }`
+        );
+        console.log(data);
+        
+        this.$emit("weatherData", data);        
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+
+  emits: ["weatherData"],
 };
 </script>
 

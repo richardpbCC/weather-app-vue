@@ -1,7 +1,7 @@
 <template>
-  <div class="container my-4">
+  <div class="container my-4" v-if="weatherData.main !== undefined">
     <div class="px-1 py-1 my-1">
-      <h4 class="display-7 fw-bold">3-day forecast</h4>      
+      <h4 class="display-7 fw-bold">3-day forecast</h4>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -12,9 +12,9 @@
             alt=""
           />
           <div class="card-body">
-            <p>YYYY-MM-DD Day</p> 
+            <p>YYYY-MM-DD Day</p>
             <h3 class="card-title">Weather</h3>
-            <p>Max: ~~ degrees Min: ~~ degrees</p>            
+            <p>Max: ~~ degrees Min: ~~ degrees</p>
           </div>
         </div>
       </div>
@@ -27,9 +27,9 @@
             alt=""
           />
           <div class="card-body">
-            <p>YYYY-MM-DD Day</p> 
+            <p>YYYY-MM-DD Day</p>
             <h3 class="card-title">Weather</h3>
-            <p>Max: ~~ degrees Min: ~~ degrees</p>            
+            <p>Max: ~~ degrees Min: ~~ degrees</p>
           </div>
         </div>
       </div>
@@ -42,14 +42,12 @@
             alt=""
           />
           <div class="card-body">
-            <p>YYYY-MM-DD Day</p> 
+            <p>YYYY-MM-DD Day</p>
             <h3 class="card-title">Weather</h3>
-            <p>Max: ~~ degrees Min: ~~ degrees</p>            
+            <p>Max: ~~ degrees Min: ~~ degrees</p>
           </div>
         </div>
       </div>
-
-      
     </div>
   </div>
 </template>
@@ -57,6 +55,18 @@
 <script>
 export default {
   name: "Cards",
+
+  props: ["weatherData"],
+
+  data: () => ({
+    //temp: this.$props.weatherData.main.temp,
+    //tempMin: this.$props.weatherData.main.temp_min,
+  }),
+
+  methods: {
+
+  },
+
 };
 </script>
 
