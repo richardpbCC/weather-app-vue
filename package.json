@@ -7,6 +7,7 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.14.0",
     "@popperjs/core": "^2.11.5",
     "axios": "^0.26.1",
     "bootstrap": "^5.1.3",
