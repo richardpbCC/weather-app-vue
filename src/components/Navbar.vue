@@ -71,9 +71,22 @@ export default {
   props: ["userCoordinates"],
 
   mounted() {
-    console.log(this.$props.userCoordinates.lat);
-    if (this.$props.userCoordinates.lat) {
-      console.log("created");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coordinates = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          };
+          console.log(coordinates);
+          this.getWeatherData(coordinates);
+        },
+        (error) => {
+          console.error(error.message);
+        }
+      );
+    } else {
+      console.error("Browser does not support geolocation");
     }
   },
 
@@ -83,21 +96,25 @@ export default {
 
   methods: {
     getCoordinates: async function (event) {
-      //const postCode = this.destination;
-      const postCode = "160-0022";
-      const countryCode = "JP";
-      this.$refs.searchBox.reset();
-      const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
+      try {
+        //const postCode = this.destination;
+        const postCode = "160-0022";
+        const countryCode = "JP";
+        this.$refs.searchBox.reset();
+        const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
 
-      const { data } = await axios.get(
-        `${urlBase}zip=${postCode},${countryCode}&appid=${
-          import.meta.env.VITE_API_KEY
-        }`
-      );
+        const { data } = await axios.get(
+          `${urlBase}zip=${postCode},${countryCode}&appid=${
+            import.meta.env.VITE_API_KEY
+          }`
+        );
 
-      const coordinates = { lat: data.lat, lon: data.lon };
+        const coordinates = { lat: data.lat, lon: data.lon };
 
-      this.getWeatherData(coordinates);
+        this.getWeatherData(coordinates);
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     getWeatherData: async function (coordinates) {
@@ -105,13 +122,13 @@ export default {
         const urlBase = "https://api.openweathermap.org/data/2.5/onecall?";
 
         const { data } = await axios.get(
-          `${urlBase}lat=${coordinates.lat}&lon=-${
+          `${urlBase}lat=${coordinates.lat}&lon=${
             coordinates.lon
           }&exclude=minutely,hourly&units=metric&appid=${
             import.meta.env.VITE_API_KEY
           }`
         );
-        console.log(data);
+        console.log("data",data);
 
         this.$emit("weatherData", data);
       } catch (error) {
