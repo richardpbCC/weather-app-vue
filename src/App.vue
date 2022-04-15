@@ -52,20 +52,6 @@ export default {
     },
     formatDate: function (unixFormatDate) {
       const date = new Date(unixFormatDate * 1000);
-      const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
       const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
       const year = date.getFullYear();
       const month = date.getMonth();
