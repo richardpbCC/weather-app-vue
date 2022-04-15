@@ -17,7 +17,7 @@ export default defineComponent({
   components: { GoogleMap, Marker },
 
   data: () => ({
-    apiKey : import.meta.env.VITE_GMAP_KEY,
+    //apiKey : import.meta.env.VITE_GMAP_KEY,
   }),
 
   setup() {

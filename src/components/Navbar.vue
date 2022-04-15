@@ -1,48 +1,10 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <div class="navbar-brand" href="#">Weather Forecast</div>
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Dropdown
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
-          </li>
-        </ul>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
         <form
           class="d-flex"
           v-on:submit.stop.prevent="getCoordinates"
@@ -51,9 +13,10 @@
           <input
             class="form-control me-2"
             type="search"
-            placeholder="160-0022"
+            placeholder="〒 160-0022"
             aria-label="Search"
             v-model="destination"
+            ref="searchForm"
           />
           <button class="btn btn-outline-success" type="submit">Submit</button>
         </form>
@@ -79,7 +42,7 @@ export default {
             lon: position.coords.longitude,
           };
           console.log(coordinates);
-          //this.getWeatherData(coordinates);
+          this.getWeatherData(coordinates);
         },
         (error) => {
           console.error(error.message);
@@ -95,23 +58,51 @@ export default {
   }),
 
   methods: {
-    getCoordinates: async function (event) {
+    getCoordinates: async function () {
       try {
-        //const postCode = this.destination;
-        const postCode = "160-0022";
-        const countryCode = "JP";
-        this.$refs.searchBox.reset();
-        const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
+        //check the format of input and alert user if format is not "NNN-NNNN"
+        const input = this.destination.split("");
+        let validInput;
+        const errorMessage = `${this.destination} is not a valid input. Please use the format "NNN-NNNN"`;
 
-        // const { data } = await axios.get(
-        //   `${urlBase}zip=${postCode},${countryCode}&appid=${
-        //     import.meta.env.VITE_API_KEY
-        //   }`
-        // );
-        const data = {};
-        const coordinates = { lat: data.lat, lon: data.lon };
+        if (input.length === 8) {
+          validInput = input.reduce((result, char, index) => {
+            if (index === 3) {
+              if (char !== "-") {
+                return false;
+              } else {
+                return result;
+              }
+            }
 
-        //this.getWeatherData(coordinates);
+            if (isNaN(char)) {
+              return false;
+            }
+            return result;
+          }, true);
+        }
+
+        if (validInput) {
+          console.log(validInput);
+          //const postCode = this.destination;
+          const postCode = "160-0022";
+          const countryCode = "JP";
+          this.$refs.searchBox.reset();
+          const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
+
+          const { data } = await axios.get(
+            `${urlBase}zip=${postCode},${countryCode}&appid=${
+              import.meta.env.VITE_API_KEY
+            }`
+          );
+          // const data = {};
+          const coordinates = { lat: data.lat, lon: data.lon };
+
+          this.getWeatherData(coordinates);
+        } else {
+          this.$refs.searchBox.reset();
+          alert(errorMessage);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -121,15 +112,15 @@ export default {
       try {
         const urlBase = "https://api.openweathermap.org/data/2.5/onecall?";
 
-        // const { data } = await axios.get(
-        //   `${urlBase}lat=${coordinates.lat}&lon=${
-        //     coordinates.lon
-        //   }&exclude=minutely,hourly&units=metric&appid=${
-        //     import.meta.env.VITE_API_KEY
-        //   }`
-        // );
-        const data = {};
-        console.log("data",data);
+        const { data } = await axios.get(
+          `${urlBase}lat=${coordinates.lat}&lon=${
+            coordinates.lon
+          }&exclude=minutely,hourly&units=metric&appid=${
+            import.meta.env.VITE_API_KEY
+          }`
+        );
+        //const data = {};
+        console.log("data", data);
         this.$emit("weatherData", data);
       } catch (error) {
         console.error(error);
