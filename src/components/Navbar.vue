@@ -68,6 +68,15 @@ import axios from "axios";
 export default {
   name: "Navbar",
 
+  props: ["userCoordinates"],
+
+  mounted() {
+    console.log(this.$props.userCoordinates.lat);
+    if (this.$props.userCoordinates.lat) {
+      console.log("created");
+    }
+  },
+
   data: () => ({
     destination: "",
   }),

@@ -15,7 +15,27 @@ export default {
     Footer,
   },
 
+  created() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.userCoordinates.lat = position.coords.latitude;
+          this.userCoordinates.lon = position.coords.longitude;
+        },
+        (error) => {
+          console.error(error.message);
+        }
+      );
+    } else {
+      console.error("Browser does not support geolocation");
+    }
+  },
+
   data: () => ({
+    userCoordinates: {
+      lat: "",
+      lon: "",
+    },
     weatherData: {},
   }),
 
@@ -70,10 +90,13 @@ export default {
 <template>
   <header>
     <div id="app">
-      <Navbar v-on:weatherData="updateWeatherData" />
+      <Navbar
+        v-on:weatherData="updateWeatherData"
+        v-bind:userCoordinates="userCoordinates"
+      />
       <Location />
       <Cards v-bind:weatherData="weatherData" />
-      <Information />
+      <Information v-bind:userCoordinates="userCoordinates" />
       <Footer />
     </div>
   </header>
