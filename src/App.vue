@@ -13,10 +13,11 @@ export default {
     Cards,
     Information,
     Footer,
-  },  
+  },
 
-  data: () => ({    
+  data: () => ({
     weatherData: {},
+    weatherMap: "",
   }),
 
   methods: {
@@ -49,7 +50,8 @@ export default {
           date: this.formatDate(data.daily[2].dt),
         },
       };
-    },
+    },    
+
     formatDate: function (unixFormatDate) {
       const date = new Date(unixFormatDate * 1000);
       const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];

@@ -98,7 +98,7 @@ export default {
           // const data = {};
           const coordinates = { lat: data.lat, lon: data.lon };
 
-          this.getWeatherData(coordinates);
+          this.getWeatherData(coordinates);          
         } else {
           this.$refs.searchBox.reset();
           alert(errorMessage);
@@ -125,7 +125,7 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
+    },    
   },
 
   emits: ["weatherData"],
