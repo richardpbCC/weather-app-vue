@@ -13,23 +13,7 @@ export default {
     Cards,
     Information,
     Footer,
-  },
-
-  // beforeCreate() {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         this.userCoordinates.lat = position.coords.latitude;
-  //         this.userCoordinates.lon = position.coords.longitude;
-  //       },
-  //       (error) => {
-  //         console.error(error.message);
-  //       }
-  //     );
-  //   } else {
-  //     console.error("Browser does not support geolocation");
-  //   }
-  // },
+  },  
 
   data: () => ({    
     weatherData: {},

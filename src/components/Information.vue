@@ -1,11 +1,11 @@
 <template>
-  <div class="container my-5" v-if="weatherData.day0">
+  <div class="container my-5">
     <div class="row">
-
       <div class="col-md-6">
         <h4 class="display-7 fw-bold">Map</h4>
-        <h1>{{ }}</h1>
-        <p>Lat: {{  }} Lon: {{  }}</p>
+        <h1>{{}}</h1>
+        <p>Lat: {{}} Lon: {{}}</p>   
+      <Map />
       </div>
 
       <div class="col-md-6">
@@ -16,15 +16,27 @@
 </template>
 
 <script>
+import Map from "./Map.vue";
+
 export default {
   name: "Information",
 
+  components: {
+    Map,
+  },
+
   props: ["weatherData"],
 
-  data: () => ({}),
+  data: () => ({
+  
+  }),
 
-  methods: {},
+  methods: {
+
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

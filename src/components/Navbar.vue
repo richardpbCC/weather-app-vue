@@ -79,7 +79,7 @@ export default {
             lon: position.coords.longitude,
           };
           console.log(coordinates);
-          this.getWeatherData(coordinates);
+          //this.getWeatherData(coordinates);
         },
         (error) => {
           console.error(error.message);
@@ -103,15 +103,15 @@ export default {
         this.$refs.searchBox.reset();
         const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
 
-        const { data } = await axios.get(
-          `${urlBase}zip=${postCode},${countryCode}&appid=${
-            import.meta.env.VITE_API_KEY
-          }`
-        );
-
+        // const { data } = await axios.get(
+        //   `${urlBase}zip=${postCode},${countryCode}&appid=${
+        //     import.meta.env.VITE_API_KEY
+        //   }`
+        // );
+        const data = {};
         const coordinates = { lat: data.lat, lon: data.lon };
 
-        this.getWeatherData(coordinates);
+        //this.getWeatherData(coordinates);
       } catch (error) {
         console.error(error);
       }
@@ -121,15 +121,15 @@ export default {
       try {
         const urlBase = "https://api.openweathermap.org/data/2.5/onecall?";
 
-        const { data } = await axios.get(
-          `${urlBase}lat=${coordinates.lat}&lon=${
-            coordinates.lon
-          }&exclude=minutely,hourly&units=metric&appid=${
-            import.meta.env.VITE_API_KEY
-          }`
-        );
+        // const { data } = await axios.get(
+        //   `${urlBase}lat=${coordinates.lat}&lon=${
+        //     coordinates.lon
+        //   }&exclude=minutely,hourly&units=metric&appid=${
+        //     import.meta.env.VITE_API_KEY
+        //   }`
+        // );
+        const data = {};
         console.log("data",data);
-
         this.$emit("weatherData", data);
       } catch (error) {
         console.error(error);
