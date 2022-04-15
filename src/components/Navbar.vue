@@ -63,7 +63,7 @@ export default {
         //check the format of input and alert user if format is not "NNN-NNNN"
         const input = this.destination.split("");
         let validInput;
-        const errorMessage = `${this.destination} is not a valid input. Please use the format "NNN-NNNN"`;
+        const errorMessage = `${this.destination || "That"} is not a valid input. Please use the format "NNN-NNNN"`;
 
         if (input.length === 8) {
           validInput = input.reduce((result, char, index) => {
@@ -84,8 +84,8 @@ export default {
 
         if (validInput) {
           console.log(validInput);
-          //const postCode = this.destination;
-          const postCode = "160-0022";
+          const postCode = this.destination;
+          //const postCode = "160-0022";
           const countryCode = "JP";
           this.$refs.searchBox.reset();
           const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
@@ -102,6 +102,7 @@ export default {
         } else {
           this.$refs.searchBox.reset();
           alert(errorMessage);
+          this.destination = "";
         }
       } catch (error) {
         console.error(error);

@@ -1,13 +1,15 @@
 <template>
-  <GoogleMap
-    :api-key="apiKey"
-    style="width: 100%; height: 500px"
-    mapTypeId="hybrid"
-    :center="center"
-    :zoom="19"
-  >
-    <Marker :options="{ position: center }" />
-  </GoogleMap>
+  <div class="container">
+    <GoogleMap
+      :api-key="apiKey"
+      style="width: 100%; height: 500px"
+      mapTypeId="hybrid"
+      :center="center"
+      :zoom="19"
+    >
+      <Marker :options="{ position: center }" />
+    </GoogleMap>
+  </div>
 </template>
 
 <script>
@@ -17,10 +19,12 @@ import { GoogleMap, Marker } from "vue3-google-map";
 export default defineComponent({
   components: { GoogleMap, Marker },
 
+  props: ["weatherData"],
+
   data: () => ({}),
 
   setup() {
-    const center = { lat: 40.689247, lng: -74.044502 };
+    const center = { lat: weatherData.lat, lng: weatherData.lon };
     const apiKey = import.meta.env.VITE_GMAP_KEY;
     return { center, apiKey };
   },

@@ -16,8 +16,7 @@ export default {
   },
 
   data: () => ({
-    weatherData: {},
-    weatherMap: "",
+    weatherData: {},    
   }),
 
   methods: {

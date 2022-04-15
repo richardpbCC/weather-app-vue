@@ -16,6 +16,8 @@ import { GoogleMap, Marker } from "vue3-google-map";
 export default defineComponent({
   components: { GoogleMap, Marker },
 
+  props: ["weatherData"],
+
   data: () => ({}),
 
   setup() {
