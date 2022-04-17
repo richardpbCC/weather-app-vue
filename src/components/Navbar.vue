@@ -41,7 +41,7 @@ export default {
             lat: position.coords.latitude,
             lon: position.coords.longitude,
           };
-          
+
           this.$emit("userCoordinates", coordinates);
           this.getWeatherData(coordinates);
         },
@@ -85,26 +85,29 @@ export default {
           }, true);
         }
 
+        //if input is valid fetch coordinates
         if (validInput) {
-          console.log(validInput);
+          const testPostCode = "160-0022";
           const postCode = this.destination;
-          //const postCode = "160-0022";
           const countryCode = "JP";
           this.$refs.searchBox.reset();
           const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
 
-          // const { data } = await axios.get(
-          //   `${urlBase}zip=${postCode},${countryCode}&appid=${
-          //     import.meta.env.VITE_API_KEY
-          //   }`
-          // );
-          const data = {
-            lat: 35.6933,
-            lon: 139.709,
-          };
-          const coordinates = { lat: data.lat, lon: data.lon };
+          const { data } = await axios.get(
+            `${urlBase}zip=${postCode},${countryCode}&appid=${
+              import.meta.env.VITE_OPENWEATHER_KEY1
+            }`
+          );
 
-          this.getWeatherData(coordinates);
+          const locationData = {
+            lat: data.lat,
+            lon: data.lon,
+            postCode: data.zip,
+            city: data.name,
+            country: data.country,
+          };
+
+          this.getWeatherData(locationData);
         } else {
           this.$refs.searchBox.reset();
           alert(errorMessage);
@@ -115,56 +118,46 @@ export default {
       }
     },
 
-    getWeatherData: async function (coordinates) {
+    //fetch weather data based on coordinates
+    getWeatherData: async function (locationData) {
       try {
-        const urlBase = "https://api.openweathermap.org/data/2.5/onecall?";
 
-        // const { data } = await axios.get(
-        //   `${urlBase}lat=${coordinates.lat}&lon=${
-        //     coordinates.lon
-        //   }&exclude=minutely,hourly&units=metric&appid=${
-        //     import.meta.env.VITE_API_KEY
-        //   }`
-        // );
+        //for user location on page load, fetch location info
+        if (locationData.postCode === undefined) {
+          const urlBasePlace = "http://api.openweathermap.org/geo/1.0/reverse?";
 
-        const data = {
-          day0: {
-            temp: 16,
-            tempMin: 10,
-            tempMax: 18,
-            type: "Clear",
-            description: "Clear",
-            date: "2022-03-17",
-          },
-          day1: {
-            temp: 16,
-            tempMin: 10,
-            tempMax: 18,
-            type: "Rain",
-            description: "Rain",
-            date: "2022-03-18",
-          },
-          day2: {
-            temp: 16,
-            tempMin: 10,
-            tempMax: 18,
-            type: "Thunderstorm",
-            description: "Thunderstorm",
-            date: "2022-03-19",
-          },
-          lat: coordinates.lat,
-          lon: coordinates.lon
-        };
+          const address = await axios.get(
+            `${urlBasePlace}lat=${locationData.lat}&lon=${locationData.lon}&limit=1&appid=${
+              import.meta.env.VITE_OPENWEATHER_KEY1
+            }`
+          );
+          locationData.postCode = "Postcode not provided"; 
+          locationData.city = address.data[0].name; 
+          locationData.country = address.data[0].country; 
+        }
+        
+        const urlBaseWeather =
+          "https://api.openweathermap.org/data/2.5/onecall?";
 
-        console.log("data", data);
+        const { data } = await axios.get(
+          `${urlBaseWeather}lat=${locationData.lat}&lon=${
+            locationData.lon
+          }&exclude=minutely,hourly&units=metric&appid=${
+            import.meta.env.VITE_OPENWEATHER_KEY2
+          }`
+        );
+        data.lat = locationData.lat;
+        data.lon = locationData.lon;
+
         this.$emit("weatherData", data);
+        this.$emit("locationData", locationData);
       } catch (error) {
         console.error(error);
       }
     },
   },
 
-  emits: ["weatherData", "userCoordinates"],
+  emits: ["weatherData", "locationData"],
 };
 </script>
 
