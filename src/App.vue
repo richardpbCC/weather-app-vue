@@ -16,40 +16,46 @@ export default {
   },
 
   data: () => ({
-    weatherData: {},    
+    weatherData: {},
+    userCoordinates : {},
   }),
 
   methods: {
     updateWeatherData: function (data) {
-      this.weatherData = {
-        day0: {
-          temp: Math.round(data.daily[0].temp.day),
-          tempMin: Math.round(data.daily[0].temp.min),
-          tempMax: Math.round(data.daily[0].temp.max),
-          type: data.daily[0].weather[0].main,
-          description: data.current.weather[0].description,
-          date: this.formatDate(data.daily[0].dt),
-        },
+      // this.weatherData = {
+      //   day0: {
+      //     temp: Math.round(data.daily[0].temp.day),
+      //     tempMin: Math.round(data.daily[0].temp.min),
+      //     tempMax: Math.round(data.daily[0].temp.max),
+      //     type: data.daily[0].weather[0].main,
+      //     description: data.current.weather[0].description,
+      //     date: this.formatDate(data.daily[0].dt),
+      //   },
 
-        day1: {
-          temp: Math.round(data.daily[1].temp.day),
-          tempMin: Math.round(data.daily[1].temp.min),
-          tempMax: Math.round(data.daily[1].temp.max),
-          type: data.daily[1].weather[0].main,
-          description: data.current.weather[0].description,
-          date: this.formatDate(data.daily[1].dt),
-        },
+      //   day1: {
+      //     temp: Math.round(data.daily[1].temp.day),
+      //     tempMin: Math.round(data.daily[1].temp.min),
+      //     tempMax: Math.round(data.daily[1].temp.max),
+      //     type: data.daily[1].weather[0].main,
+      //     description: data.current.weather[0].description,
+      //     date: this.formatDate(data.daily[1].dt),
+      //   },
 
-        day2: {
-          temp: Math.round(data.daily[2].temp.day),
-          tempMin: Math.round(data.daily[2].temp.min),
-          tempMax: Math.round(data.daily[2].temp.max),
-          type: data.daily[2].weather[0].main,
-          description: data.current.weather[0].description,
-          date: this.formatDate(data.daily[2].dt),
-        },
-      };
-    },    
+      //   day2: {
+      //     temp: Math.round(data.daily[2].temp.day),
+      //     tempMin: Math.round(data.daily[2].temp.min),
+      //     tempMax: Math.round(data.daily[2].temp.max),
+      //     type: data.daily[2].weather[0].main,
+      //     description: data.current.weather[0].description,
+      //     date: this.formatDate(data.daily[2].dt),
+      //   },
+      // };
+      this.weatherData = data;
+    },
+
+    updateUserCoordinates: function (data) {
+      this.userCoordinates = data;
+    },
 
     formatDate: function (unixFormatDate) {
       const date = new Date(unixFormatDate * 1000);
@@ -71,10 +77,16 @@ export default {
 <template>
   <header>
     <div id="app">
-      <Navbar v-on:weatherData="updateWeatherData" />
+      <Navbar
+        v-on:weatherData="updateWeatherData"
+        v-on:userCoordinates="updateUserCoordinates"
+      />
       <Location />
       <Cards v-bind:weatherData="weatherData" />
-      <Information v-bind:weatherData="weatherData" />
+      <Information
+        v-bind:weatherData="weatherData"
+        v-bind:userCoordinates="userCoordinates"
+      />
       <Footer />
     </div>
   </header>

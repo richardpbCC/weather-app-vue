@@ -41,7 +41,8 @@ export default {
             lat: position.coords.latitude,
             lon: position.coords.longitude,
           };
-          console.log(coordinates);
+          
+          this.$emit("userCoordinates", coordinates);
           this.getWeatherData(coordinates);
         },
         (error) => {
@@ -63,7 +64,9 @@ export default {
         //check the format of input and alert user if format is not "NNN-NNNN"
         const input = this.destination.split("");
         let validInput;
-        const errorMessage = `${this.destination || "That"} is not a valid input. Please use the format "NNN-NNNN"`;
+        const errorMessage = `${
+          this.destination || "That"
+        } is not a valid input. Please use the format "NNN-NNNN"`;
 
         if (input.length === 8) {
           validInput = input.reduce((result, char, index) => {
@@ -90,15 +93,18 @@ export default {
           this.$refs.searchBox.reset();
           const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
 
-          const { data } = await axios.get(
-            `${urlBase}zip=${postCode},${countryCode}&appid=${
-              import.meta.env.VITE_API_KEY
-            }`
-          );
-          // const data = {};
+          // const { data } = await axios.get(
+          //   `${urlBase}zip=${postCode},${countryCode}&appid=${
+          //     import.meta.env.VITE_API_KEY
+          //   }`
+          // );
+          const data = {
+            lat: 35.6933,
+            lon: 139.709,
+          };
           const coordinates = { lat: data.lat, lon: data.lon };
 
-          this.getWeatherData(coordinates);          
+          this.getWeatherData(coordinates);
         } else {
           this.$refs.searchBox.reset();
           alert(errorMessage);
@@ -113,23 +119,50 @@ export default {
       try {
         const urlBase = "https://api.openweathermap.org/data/2.5/onecall?";
 
-        const { data } = await axios.get(
-          `${urlBase}lat=${coordinates.lat}&lon=${
-            coordinates.lon
-          }&exclude=minutely,hourly&units=metric&appid=${
-            import.meta.env.VITE_API_KEY
-          }`
-        );
-        //const data = {};
+        // const { data } = await axios.get(
+        //   `${urlBase}lat=${coordinates.lat}&lon=${
+        //     coordinates.lon
+        //   }&exclude=minutely,hourly&units=metric&appid=${
+        //     import.meta.env.VITE_API_KEY
+        //   }`
+        // );
+
+        const data = {
+          day0: {
+            temp: 16,
+            tempMin: 10,
+            tempMax: 18,
+            type: "Clear",
+            description: "Clear",
+            date: "2022-03-17",
+          },
+          day1: {
+            temp: 16,
+            tempMin: 10,
+            tempMax: 18,
+            type: "Rain",
+            description: "Rain",
+            date: "2022-03-18",
+          },
+          day2: {
+            temp: 16,
+            tempMin: 10,
+            tempMax: 18,
+            type: "Thunderstorm",
+            description: "Thunderstorm",
+            date: "2022-03-19",
+          },
+        };
+
         console.log("data", data);
         this.$emit("weatherData", data);
       } catch (error) {
         console.error(error);
       }
-    },    
+    },
   },
 
-  emits: ["weatherData"],
+  emits: ["weatherData", "userCoordinates"],
 };
 </script>
 

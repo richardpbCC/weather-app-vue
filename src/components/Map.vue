@@ -1,9 +1,9 @@
 <template>
   <GoogleMap
     :api-key="apiKey"
-    style="width: 100%; height: 500px"    
+    style="width: 100%; height: 500px"
     :center="center"
-    :zoom="19"
+    :zoom="15"
   >
     <Marker :options="{ position: center }" />
   </GoogleMap>
@@ -16,15 +16,24 @@ import { GoogleMap, Marker } from "vue3-google-map";
 export default defineComponent({
   components: { GoogleMap, Marker },
 
-  props: ["weatherData"],
+  props: ["weatherData", "userCoordinates"],
+
+  setup(props) {
+    const userCoordinates = props.userCoordinates;
+    const weatherData = props.weatherData;
+
+    const center = {
+      lat: weatherData.lat || userCoordinates.lat,
+      lng: weatherData.lon || userCoordinates.lon,
+    };
+
+    const apiKey = import.meta.env.VITE_GMAP_KEY;
+
+    return { center, apiKey };
+  },
 
   data: () => ({}),
 
-  setup() {
-    const center = { lat: 40.689247, lng: -74.044502 };
-    const apiKey = import.meta.env.VITE_GMAP_KEY;
-    return { center, apiKey };
-  },
 });
 </script>
 

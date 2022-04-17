@@ -5,7 +5,7 @@
       style="width: 100%; height: 500px"
       mapTypeId="hybrid"
       :center="center"
-      :zoom="19"
+      :zoom="21"
     >
       <Marker :options="{ position: center }" />
     </GoogleMap>
@@ -19,15 +19,23 @@ import { GoogleMap, Marker } from "vue3-google-map";
 export default defineComponent({
   components: { GoogleMap, Marker },
 
-  props: ["weatherData"],
+  props: ["weatherData", "userCoordinates"],
 
-  data: () => ({}),
+  setup(props) {
+    const userCoordinates = props.userCoordinates;
+    const weatherData = props.weatherData;
 
-  setup() {
-    const center = { lat: weatherData.lat, lng: weatherData.lon };
+    const center = {
+      lat: weatherData.lat || userCoordinates.lat,
+      lng: weatherData.lon || userCoordinates.lon,
+    };
+
     const apiKey = import.meta.env.VITE_GMAP_KEY;
+
     return { center, apiKey };
   },
+
+  data: () => ({}),
 });
 </script>
 
