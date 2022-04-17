@@ -16,12 +16,16 @@ export default {
   },
 
   data: () => ({
-    weatherData: {},    
+    weatherData: {},
+    locationData: {},
   }),
 
   methods: {
     updateWeatherData: function (data) {
       this.weatherData = {
+        lat: data.lat,
+        lon: data.lon,
+        
         day0: {
           temp: Math.round(data.daily[0].temp.day),
           tempMin: Math.round(data.daily[0].temp.min),
@@ -49,7 +53,11 @@ export default {
           date: this.formatDate(data.daily[2].dt),
         },
       };
-    },    
+    },
+
+    updateLocationData: function (data) {      
+      this.locationData = data;
+    },
 
     formatDate: function (unixFormatDate) {
       const date = new Date(unixFormatDate * 1000);
@@ -71,8 +79,11 @@ export default {
 <template>
   <header>
     <div id="app">
-      <Navbar v-on:weatherData="updateWeatherData" />
-      <Location />
+      <Navbar
+        v-on:weatherData="updateWeatherData"
+        v-on:locationData="updateLocationData"
+      />
+      <Location v-bind:locationData="locationData" />
       <Cards v-bind:weatherData="weatherData" />
       <Information v-bind:weatherData="weatherData" />
       <Footer />

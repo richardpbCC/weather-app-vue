@@ -5,7 +5,7 @@
       style="width: 100%; height: 500px"
       mapTypeId="hybrid"
       :center="center"
-      :zoom="19"
+      :zoom="21"
     >
       <Marker :options="{ position: center }" />
     </GoogleMap>
@@ -21,13 +21,20 @@ export default defineComponent({
 
   props: ["weatherData"],
 
-  data: () => ({}),
+  setup(props) {
+    const weatherData = props.weatherData;
 
-  setup() {
-    const center = { lat: weatherData.lat, lng: weatherData.lon };
+    const center = {
+      lat: weatherData.lat,
+      lng: weatherData.lon,
+    };
+
     const apiKey = import.meta.env.VITE_GMAP_KEY;
+
     return { center, apiKey };
   },
+
+  data: () => ({}),
 });
 </script>
 

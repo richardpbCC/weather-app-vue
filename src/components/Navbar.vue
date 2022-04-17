@@ -41,7 +41,7 @@ export default {
             lat: position.coords.latitude,
             lon: position.coords.longitude,
           };
-          console.log(coordinates);
+
           this.getWeatherData(coordinates);
         },
         (error) => {
@@ -63,7 +63,9 @@ export default {
         //check the format of input and alert user if format is not "NNN-NNNN"
         const input = this.destination.split("");
         let validInput;
-        const errorMessage = `${this.destination || "That"} is not a valid input. Please use the format "NNN-NNNN"`;
+        const errorMessage = `${
+          this.destination || "That"
+        } is not a valid input. Please use the format "NNN-NNNN"`;
 
         if (input.length === 8) {
           validInput = input.reduce((result, char, index) => {
@@ -82,23 +84,29 @@ export default {
           }, true);
         }
 
+        //if input is valid fetch coordinates
         if (validInput) {
-          console.log(validInput);
+          const testPostCode = "160-0022";
           const postCode = this.destination;
-          //const postCode = "160-0022";
           const countryCode = "JP";
           this.$refs.searchBox.reset();
           const urlBase = "http://api.openweathermap.org/geo/1.0/zip?";
 
           const { data } = await axios.get(
             `${urlBase}zip=${postCode},${countryCode}&appid=${
-              import.meta.env.VITE_API_KEY
+              import.meta.env.VITE_OPENWEATHER_KEY1
             }`
           );
-          // const data = {};
-          const coordinates = { lat: data.lat, lon: data.lon };
 
-          this.getWeatherData(coordinates);          
+          const locationData = {
+            lat: data.lat,
+            lon: data.lon,
+            postCode: data.zip,
+            city: data.name,
+            country: data.country,
+          };
+
+          this.getWeatherData(locationData);
         } else {
           this.$refs.searchBox.reset();
           alert(errorMessage);
@@ -109,27 +117,46 @@ export default {
       }
     },
 
-    getWeatherData: async function (coordinates) {
+    //fetch weather data based on coordinates
+    getWeatherData: async function (locationData) {
       try {
-        const urlBase = "https://api.openweathermap.org/data/2.5/onecall?";
+
+        //for user location on page load, fetch location info
+        if (locationData.postCode === undefined) {
+          const urlBasePlace = "http://api.openweathermap.org/geo/1.0/reverse?";
+
+          const address = await axios.get(
+            `${urlBasePlace}lat=${locationData.lat}&lon=${locationData.lon}&limit=1&appid=${
+              import.meta.env.VITE_OPENWEATHER_KEY1
+            }`
+          );
+          locationData.postCode = "Postcode not provided"; 
+          locationData.city = address.data[0].name; 
+          locationData.country = address.data[0].country; 
+        }
+        
+        const urlBaseWeather =
+          "https://api.openweathermap.org/data/2.5/onecall?";
 
         const { data } = await axios.get(
-          `${urlBase}lat=${coordinates.lat}&lon=${
-            coordinates.lon
+          `${urlBaseWeather}lat=${locationData.lat}&lon=${
+            locationData.lon
           }&exclude=minutely,hourly&units=metric&appid=${
-            import.meta.env.VITE_API_KEY
+            import.meta.env.VITE_OPENWEATHER_KEY2
           }`
         );
-        //const data = {};
-        console.log("data", data);
+        data.lat = locationData.lat;
+        data.lon = locationData.lon;
+
         this.$emit("weatherData", data);
+        this.$emit("locationData", locationData);
       } catch (error) {
         console.error(error);
       }
-    },    
+    },
   },
 
-  emits: ["weatherData"],
+  emits: ["weatherData", "locationData"],
 };
 </script>
 
