@@ -152,6 +152,8 @@ export default {
             description: "Thunderstorm",
             date: "2022-03-19",
           },
+          lat: coordinates.lat,
+          lon: coordinates.lon
         };
 
         console.log("data", data);

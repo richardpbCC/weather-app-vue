@@ -19,15 +19,15 @@ import { GoogleMap, Marker } from "vue3-google-map";
 export default defineComponent({
   components: { GoogleMap, Marker },
 
-  props: ["weatherData", "userCoordinates"],
+  props: ["weatherData"],
 
   setup(props) {
-    const userCoordinates = props.userCoordinates;
+    console.log(props.weatherData)
     const weatherData = props.weatherData;
 
     const center = {
-      lat: weatherData.lat || userCoordinates.lat,
-      lng: weatherData.lon || userCoordinates.lon,
+      lat: weatherData.lat,
+      lng: weatherData.lon,
     };
 
     const apiKey = import.meta.env.VITE_GMAP_KEY;

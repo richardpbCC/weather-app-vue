@@ -17,7 +17,6 @@ export default {
 
   data: () => ({
     weatherData: {},
-    userCoordinates : {},
   }),
 
   methods: {
@@ -53,10 +52,6 @@ export default {
       this.weatherData = data;
     },
 
-    updateUserCoordinates: function (data) {
-      this.userCoordinates = data;
-    },
-
     formatDate: function (unixFormatDate) {
       const date = new Date(unixFormatDate * 1000);
       const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
@@ -77,16 +72,10 @@ export default {
 <template>
   <header>
     <div id="app">
-      <Navbar
-        v-on:weatherData="updateWeatherData"
-        v-on:userCoordinates="updateUserCoordinates"
-      />
+      <Navbar v-on:weatherData="updateWeatherData" />
       <Location />
       <Cards v-bind:weatherData="weatherData" />
-      <Information
-        v-bind:weatherData="weatherData"
-        v-bind:userCoordinates="userCoordinates"
-      />
+      <Information v-bind:weatherData="weatherData" />
       <Footer />
     </div>
   </header>

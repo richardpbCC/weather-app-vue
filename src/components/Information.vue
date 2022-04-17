@@ -3,18 +3,12 @@
     <div class="row">
       <div class="col-md-6">
         <h4 class="display-7 fw-bold">Map</h4>
-        <Map
-          v-bind:weatherData="weatherData"
-          v-bind:userCoordinates="userCoordinates"
-        />
+        <Map v-bind:weatherData="weatherData" />
       </div>
 
       <div class="col-md-6">
         <h4 class="display-7 fw-bold">Satellite View</h4>
-        <SatelliteView
-          v-bind:weatherData="weatherData"
-          v-bind:userCoordinates="userCoordinates"
-        />
+        <SatelliteView v-bind:weatherData="weatherData" />
       </div>
     </div>
   </div>
@@ -27,7 +21,7 @@ import SatelliteView from "./SatelliteView.vue";
 export default {
   name: "Information",
 
-  props: ["weatherData", "userCoordinates"],
+  props: ["weatherData"],
 
   components: {
     Map,
