@@ -42,7 +42,6 @@ export default {
             lon: position.coords.longitude,
           };
 
-          this.$emit("userCoordinates", coordinates);
           this.getWeatherData(coordinates);
         },
         (error) => {

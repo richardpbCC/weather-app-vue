@@ -22,7 +22,6 @@ export default defineComponent({
   props: ["weatherData"],
 
   setup(props) {
-    
     const weatherData = props.weatherData;
 
     const center = {
